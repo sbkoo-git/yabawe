@@ -12,7 +12,7 @@ const GameBoard = ({ cups, phase, onCupClick, positions }) => {
         
         {/* 🦊 마스크 쓴 사기꾼 여우 캐릭터 */}
         <motion.div 
-          className="absolute left-1/2 -translate-x-1/2 -top-4 sm:-top-8 md:-top-16 z-20"
+          className="absolute left-1/2 -translate-x-1/2 top-3 sm:top-0 md:-top-4 z-20"
           animate={isShuffling ? {
             x: [0, -10, 10, -10, 10, 0],
             rotate: [0, -5, 5, -5, 5, 0],
