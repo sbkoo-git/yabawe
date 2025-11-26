@@ -12,7 +12,7 @@ const GameBoard = ({ cups, phase, onCupClick, positions }) => {
         
         {/* 🦊 마스크 쓴 사기꾼 여우 캐릭터 */}
         <motion.div 
-          className="absolute left-1/2 -translate-x-1/2 top-3 sm:top-0 md:-top-4 z-20"
+          className="absolute left-1/2 -translate-x-1/2 top-0 sm:top-2 md:top-4 z-10"
           animate={isShuffling ? {
             x: [0, -10, 10, -10, 10, 0],
             rotate: [0, -5, 5, -5, 5, 0],
@@ -138,7 +138,7 @@ const GameBoard = ({ cups, phase, onCupClick, positions }) => {
         <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-[220px] sm:w-[300px] md:w-[450px] h-3 sm:h-5 md:h-8 bg-gradient-to-b from-amber-800 to-amber-900 rounded-full opacity-50 blur-sm" />
         
         {/* 컵들 */}
-        <div className="flex justify-center items-end gap-1 sm:gap-3 md:gap-6 min-h-[80px] sm:min-h-[120px] md:min-h-[180px] px-2 pt-6 sm:pt-10 md:pt-14">
+        <div className="flex justify-center items-end gap-1 sm:gap-3 md:gap-6 min-h-[80px] sm:min-h-[120px] md:min-h-[180px] px-2 pt-16 sm:pt-24 md:pt-32">
           {cups.map((cup, index) => (
             <Cup
               key={cup.id}
