@@ -60,15 +60,9 @@ function App() {
   // 셔플 애니메이션
   const shuffle = useCallback(async () => {
     const settings = DIFFICULTY_SETTINGS[difficulty];
-    // 🔧 셔플 거리를 80px로 축소 (모바일 대응)
-    const swapPositions = [
-      [-80, 0, 80],
-      [80, -80, 0],
-      [0, 80, -80],
-      [-80, 80, 0],
-      [80, 0, -80],
-      [0, -80, 80],
-    ];
+    
+    // 컵 간 거리 (px)
+    const CUP_DISTANCE = 100;
 
     setPhase('shuffling');
 
@@ -76,13 +70,41 @@ function App() {
     setCups(cups => cups.map(cup => ({ ...cup, state: 'shuffling' })));
 
     for (let i = 0; i < settings.shuffleCount; i++) {
-      const randomSwap = swapPositions[Math.floor(Math.random() * swapPositions.length)];
-      setPositions(randomSwap);
-      await new Promise(resolve => setTimeout(resolve, settings.shuffleSpeed));
+      // 랜덤하게 두 컵 선택하여 스왑 (0, 1, 2 중 2개)
+      const idx1 = Math.floor(Math.random() * 3);
+      let idx2 = Math.floor(Math.random() * 3);
+      while (idx2 === idx1) {
+        idx2 = Math.floor(Math.random() * 3);
+      }
+      
+      // 스왑 거리 계산
+      const distance = (idx2 - idx1) * CUP_DISTANCE;
+
+      // 스왑 애니메이션
+      const animPositions = [0, 0, 0];
+      animPositions[idx1] = distance;
+      animPositions[idx2] = -distance;
+      setPositions(animPositions);
+      
+      // 애니메이션 대기
+      await new Promise(resolve => setTimeout(resolve, settings.shuffleSpeed / 2));
+      
+      // 실제 컵 배열에서 두 컵 스왑 (공도 함께 이동!)
+      setCups(prevCups => {
+        const newCups = [...prevCups];
+        // 두 컵의 데이터 스왑
+        const temp = { ...newCups[idx1] };
+        newCups[idx1] = { ...newCups[idx2], id: idx1 };
+        newCups[idx2] = { ...temp, id: idx2 };
+        return newCups;
+      });
+      
+      // 위치 리셋
+      setPositions([0, 0, 0]);
+      
+      await new Promise(resolve => setTimeout(resolve, settings.shuffleSpeed / 2));
     }
 
-    // 원래 위치로 복귀
-    setPositions([0, 0, 0]);
     await new Promise(resolve => setTimeout(resolve, 300));
 
     setPhase('selecting');
