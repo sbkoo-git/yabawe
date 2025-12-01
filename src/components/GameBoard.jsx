@@ -95,26 +95,6 @@ const GameBoard = ({ cups, phase, onCupClick, positions }) => {
             <line x1="125" y1="75" x2="155" y2="70" stroke="#2d2d2d" strokeWidth="1.5"/>
             <line x1="125" y1="78" x2="155" y2="80" stroke="#2d2d2d" strokeWidth="1.5"/>
             
-            {/* 손 (장갑 낀 손 - 컵 조작) */}
-            <motion.g
-              animate={isShuffling ? { y: [0, -3, 3, -3, 3, 0] } : {}}
-              transition={{ duration: 0.2, repeat: Infinity }}
-            >
-              <ellipse cx="40" cy="115" rx="12" ry="8" fill="#1a1a1a"/>
-              <circle cx="30" cy="118" r="4" fill="#1a1a1a"/>
-              <circle cx="35" cy="122" r="4" fill="#1a1a1a"/>
-              <circle cx="42" cy="123" r="4" fill="#1a1a1a"/>
-            </motion.g>
-            <motion.g
-              animate={isShuffling ? { y: [0, 3, -3, 3, -3, 0] } : {}}
-              transition={{ duration: 0.2, repeat: Infinity }}
-            >
-              <ellipse cx="160" cy="115" rx="12" ry="8" fill="#1a1a1a"/>
-              <circle cx="170" cy="118" r="4" fill="#1a1a1a"/>
-              <circle cx="165" cy="122" r="4" fill="#1a1a1a"/>
-              <circle cx="158" cy="123" r="4" fill="#1a1a1a"/>
-            </motion.g>
-            
             {/* 돈자루 (뒤에) */}
             <ellipse cx="170" cy="95" rx="15" ry="20" fill="#8B7355" opacity="0.8"/>
             <text x="163" y="100" fontSize="12" fill="#2d2d2d">$</text>
@@ -137,8 +117,8 @@ const GameBoard = ({ cups, phase, onCupClick, positions }) => {
         {/* 테이블 표면 */}
         <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-[220px] sm:w-[300px] md:w-[450px] h-3 sm:h-5 md:h-8 bg-gradient-to-b from-amber-800 to-amber-900 rounded-full opacity-50 blur-sm" />
         
-        {/* 컵들 */}
-        <div className="flex justify-center items-end gap-1 sm:gap-3 md:gap-6 min-h-[80px] sm:min-h-[120px] md:min-h-[180px] px-2 pt-16 sm:pt-24 md:pt-32">
+        {/* 그릇들 */}
+        <div className="flex justify-center items-end gap-1 sm:gap-3 md:gap-6 min-h-[100px] sm:min-h-[140px] md:min-h-[200px] px-2 pt-16 sm:pt-24 md:pt-32">
           {cups.map((cup, index) => (
             <Cup
               key={cup.id}

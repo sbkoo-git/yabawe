@@ -13,20 +13,19 @@ const Cup = ({ id, hasBall, isRevealed, isSelectable, onClick, position }) => {
         duration: 0.3
       }}
       className="relative flex flex-col items-center justify-end"
-      // 🔧 반응형 크기: 모바일 70px → 태블릿 110px → 데스크톱 150px
-      style={{ width: 'clamp(70px, 22vw, 150px)', height: 'clamp(60px, 20vw, 140px)' }}
+      style={{ width: 'clamp(64px, 20vw, 128px)', height: 'clamp(56px, 18vw, 120px)' }}
     >
       {/* 바닥 그림자 */}
       <div 
-        className="absolute bottom-0 w-14 sm:w-24 md:w-36 h-2 sm:h-3 md:h-5 bg-black/40 rounded-full blur-md"
+        className="absolute bottom-0 w-12 sm:w-20 md:w-32 h-2 sm:h-3 md:h-5 bg-black/40 rounded-full blur-md"
         style={{ zIndex: 1 }}
       />
 
-      {/* 공 (컵 바닥에 위치) */}
+      {/* 공 (그릇 바닥에 위치) */}
       <motion.div 
         className="absolute"
         style={{ 
-          bottom: '2px',
+          bottom: '4px',
           zIndex: 5
         }}
         initial={{ opacity: 0, scale: 0 }}
@@ -39,178 +38,146 @@ const Cup = ({ id, hasBall, isRevealed, isSelectable, onClick, position }) => {
         <Ball visible={true} />
       </motion.div>
 
-      {/* 엎어진 컵 (바닥이 위, 입구가 아래) */}
+      {/* 아이보리색 도자기 밥공기 (엎어진 상태) */}
       <motion.div
         animate={{
-          y: isRevealed ? -50 : 0,  // 🔧 모바일에서 덜 올라가도록 축소
+          y: isRevealed ? -45 : 0,
         }}
         transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-        whileHover={isSelectable ? { scale: 1.05, y: -5 } : {}}
+        whileHover={isSelectable ? { scale: 1.05, y: -6 } : {}}
         whileTap={isSelectable ? { scale: 0.95 } : {}}
         onClick={() => isSelectable && onClick(id)}
         className={`
           relative cursor-pointer w-full h-full
-          ${isSelectable ? 'hover:brightness-110' : 'cursor-not-allowed'}
+          ${isSelectable ? 'hover:brightness-105' : 'cursor-not-allowed'}
         `}
         style={{ 
           zIndex: 10,
-          filter: 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5))'
+          filter: 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.25))'
         }}
       >
-        {/* 엎어진 컵 SVG - viewBox 유지하고 크기는 CSS로 조절 */}
+        {/* 아이보리색 도자기 밥공기 SVG */}
         <svg 
           className="w-full h-full"
-          viewBox="0 0 180 112"
+          viewBox="0 0 160 120"
           preserveAspectRatio="xMidYMid meet"
         >
           <defs>
-            {/* 메인 컵 그라데이션 - 빨간색 */}
-            <linearGradient id={`cupMain-${id}`} x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#6B0000" />
-              <stop offset="15%" stopColor="#B22222" />
-              <stop offset="35%" stopColor="#DC143C" />
-              <stop offset="50%" stopColor="#FF4444" />
-              <stop offset="65%" stopColor="#DC143C" />
-              <stop offset="85%" stopColor="#B22222" />
-              <stop offset="100%" stopColor="#6B0000" />
+            {/* 그릇 메인 그라데이션 - 아이보리색 */}
+            <linearGradient id={`bowlBody-${id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#E8E4D0" />
+              <stop offset="15%" stopColor="#F5F3E5" />
+              <stop offset="30%" stopColor="#FAF8ED" />
+              <stop offset="50%" stopColor="#FFFEF5" />
+              <stop offset="70%" stopColor="#FAF8ED" />
+              <stop offset="85%" stopColor="#F5F3E5" />
+              <stop offset="100%" stopColor="#E8E4D0" />
             </linearGradient>
 
-            {/* 컵 바닥 그라데이션 */}
-            <radialGradient id={`cupBottom-${id}`} cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#FF6666" />
-              <stop offset="70%" stopColor="#CC2222" />
-              <stop offset="100%" stopColor="#880000" />
+            {/* 내부 그라데이션 (어두운 부분) */}
+            <radialGradient id={`bowlInner-${id}`} cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stopColor="#D8D4C0" />
+              <stop offset="100%" stopColor="#B8B4A0" />
             </radialGradient>
 
-            {/* 컵 내부 어둠 (아래쪽 입구) */}
-            <radialGradient id={`cupInner-${id}`} cx="50%" cy="30%" r="70%">
-              <stop offset="0%" stopColor="#1a0505" />
-              <stop offset="100%" stopColor="#000000" />
-            </radialGradient>
+            {/* 테두리 그라데이션 */}
+            <linearGradient id={`bowlRim-${id}`} x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#F0ECD8" />
+              <stop offset="50%" stopColor="#E8E4D0" />
+              <stop offset="100%" stopColor="#D8D4C0" />
+            </linearGradient>
           </defs>
           
-          {/* 컵 몸체 */}
+          {/* 그릇 본체 - 부드러운 곡선 형태 */}
           <path
-            d="M55 6 
-               L125 6
-               C130 6, 130 14, 125 14
-               L138 100
-               C138 108, 42 108, 42 100
-               L55 14
-               C50 14, 50 6, 55 6 Z"
-            fill={`url(#cupMain-${id})`}
+            d="M20 105
+               C20 65, 30 40, 50 32
+               C65 26, 95 26, 110 32
+               C130 40, 140 65, 140 105
+               Q140 112, 80 112
+               Q20 112, 20 105 Z"
+            fill={`url(#bowlBody-${id})`}
           />
 
-          {/* 컵 바닥 (위쪽) */}
+          {/* 도자기 질감 - 가로 라인들 */}
+          <path d="M35 52 Q80 48 125 52" stroke="#E8E4D0" strokeWidth="0.6" fill="none" opacity="0.5"/>
+          <path d="M30 62 Q80 58 130 62" stroke="#E8E4D0" strokeWidth="0.6" fill="none" opacity="0.4"/>
+          <path d="M27 72 Q80 68 133 72" stroke="#E8E4D0" strokeWidth="0.6" fill="none" opacity="0.4"/>
+          <path d="M25 82 Q80 78 135 82" stroke="#E8E4D0" strokeWidth="0.6" fill="none" opacity="0.3"/>
+          <path d="M23 92 Q80 88 137 92" stroke="#E8E4D0" strokeWidth="0.6" fill="none" opacity="0.3"/>
+          <path d="M22 100 Q80 96 138 100" stroke="#E8E4D0" strokeWidth="0.6" fill="none" opacity="0.2"/>
+
+          {/* 그릇 입구 (아래쪽 - 테두리) */}
           <ellipse
-            cx="90"
-            cy="10"
-            rx="38"
+            cx="80"
+            cy="107"
+            rx="60"
             ry="7"
-            fill={`url(#cupBottom-${id})`}
+            fill={`url(#bowlRim-${id})`}
           />
 
-          {/* 컵 바닥 테두리 */}
+          {/* 그릇 내부 (어두운 부분) */}
           <ellipse
-            cx="90"
-            cy="10"
-            rx="38"
-            ry="7"
-            fill="none"
-            stroke="#440000"
-            strokeWidth="2"
-          />
-
-          {/* 컵 입구 (아래쪽) */}
-          <ellipse
-            cx="90"
-            cy="103"
+            cx="80"
+            cy="107"
             rx="50"
-            ry="8"
-            fill={`url(#cupInner-${id})`}
+            ry="4"
+            fill={`url(#bowlInner-${id})`}
           />
 
-          {/* 컵 입구 테두리 */}
-          <ellipse
-            cx="90"
-            cy="103"
-            rx="50"
-            ry="8"
-            fill="none"
-            stroke="#660000"
-            strokeWidth="3"
-          />
-
-          {/* 왼쪽 하이라이트 */}
+          {/* 왼쪽 메인 하이라이트 */}
           <path
-            d="M62 20 Q65 55 68 92"
+            d="M40 48 Q44 68 48 92"
+            stroke="rgba(255,255,255,0.6)"
+            strokeWidth="6"
+            strokeLinecap="round"
             fill="none"
+          />
+
+          {/* 왼쪽 작은 하이라이트 */}
+          <path
+            d="M52 45 Q55 58 58 72"
             stroke="rgba(255,255,255,0.35)"
-            strokeWidth="10"
+            strokeWidth="3"
             strokeLinecap="round"
-          />
-
-          {/* 오른쪽 미세 반사광 */}
-          <path
-            d="M110 22 Q113 55 116 88"
             fill="none"
-            stroke="rgba(255,255,255,0.15)"
-            strokeWidth="5"
-            strokeLinecap="round"
           />
 
-          {/* === 익살스러운 얼굴 === */}
-          
+          {/* 오른쪽 미세 반사 */}
+          <path
+            d="M115 52 Q118 68 120 88"
+            stroke="rgba(255,255,255,0.18)"
+            strokeWidth="3"
+            strokeLinecap="round"
+            fill="none"
+          />
+
+          {/* 귀여운 눈 */}
           {/* 왼쪽 눈 */}
-          <ellipse cx="70" cy="45" rx="12" ry="14" fill="white" />
-          <ellipse cx="72" cy="47" rx="6" ry="7" fill="#222" />
-          <circle cx="74" cy="44" r="2" fill="white" />
-          
+          <ellipse cx="62" cy="62" rx="10" ry="12" fill="white" stroke="#E0DCD0" strokeWidth="1"/>
+          <g>
+            <ellipse cx="62" cy="64" rx="5" ry="6" fill="#2D2D2D">
+              <animate attributeName="cx" values="58;66;58" dur="2s" repeatCount="indefinite"/>
+            </ellipse>
+            <circle cx="60" cy="61" r="1.5" fill="white">
+              <animate attributeName="cx" values="56;64;56" dur="2s" repeatCount="indefinite"/>
+            </circle>
+          </g>
+
           {/* 오른쪽 눈 */}
-          <ellipse cx="110" cy="45" rx="12" ry="14" fill="white" />
-          <ellipse cx="108" cy="47" rx="6" ry="7" fill="#222" />
-          <circle cx="110" cy="44" r="2" fill="white" />
-
-          {/* 눈썹 - 컵마다 다른 스타일 */}
-          {id === 0 && (
-            <>
-              <path d="M58 32 Q70 28 82 34" stroke="#222" strokeWidth="3" fill="none" strokeLinecap="round" />
-              <path d="M98 34 Q110 28 122 32" stroke="#222" strokeWidth="3" fill="none" strokeLinecap="round" />
-            </>
-          )}
-          {id === 1 && (
-            <>
-              <path d="M58 30 Q70 34 82 30" stroke="#222" strokeWidth="3" fill="none" strokeLinecap="round" />
-              <path d="M98 30 Q110 34 122 30" stroke="#222" strokeWidth="3" fill="none" strokeLinecap="round" />
-            </>
-          )}
-          {id === 2 && (
-            <>
-              <line x1="58" y1="32" x2="82" y2="32" stroke="#222" strokeWidth="3" strokeLinecap="round" />
-              <line x1="98" y1="32" x2="122" y2="32" stroke="#222" strokeWidth="3" strokeLinecap="round" />
-            </>
-          )}
-
-          {/* 입 - 컵마다 다른 스타일 */}
-          {id === 0 && (
-            <path d="M75 72 Q90 82 105 72" stroke="#222" strokeWidth="3" fill="none" strokeLinecap="round" />
-          )}
-          {id === 1 && (
-            <>
-              <path d="M72 68 Q90 85 108 68" stroke="#222" strokeWidth="3" fill="#FF6B6B" strokeLinecap="round" />
-              <ellipse cx="90" cy="78" rx="8" ry="4" fill="#CC0000" />
-            </>
-          )}
-          {id === 2 && (
-            <>
-              <path d="M70 70 Q90 88 110 70" stroke="#222" strokeWidth="3" fill="#FF8888" strokeLinecap="round" />
-              <rect x="78" y="70" width="24" height="8" fill="white" rx="2" />
-            </>
-          )}
+          <ellipse cx="98" cy="62" rx="10" ry="12" fill="white" stroke="#E0DCD0" strokeWidth="1"/>
+          <g>
+            <ellipse cx="98" cy="64" rx="5" ry="6" fill="#2D2D2D">
+              <animate attributeName="cx" values="94;102;94" dur="2s" repeatCount="indefinite"/>
+            </ellipse>
+            <circle cx="96" cy="61" r="1.5" fill="white">
+              <animate attributeName="cx" values="92;100;92" dur="2s" repeatCount="indefinite"/>
+            </circle>
+          </g>
 
           {/* 볼터치 */}
-          <ellipse cx="55" cy="60" rx="8" ry="5" fill="#FF9999" opacity="0.6" />
-          <ellipse cx="125" cy="60" rx="8" ry="5" fill="#FF9999" opacity="0.6" />
+          <ellipse cx="48" cy="76" rx="7" ry="4" fill="#FFB6C1" opacity="0.45"/>
+          <ellipse cx="112" cy="76" rx="7" ry="4" fill="#FFB6C1" opacity="0.45"/>
 
         </svg>
 
@@ -228,22 +195,9 @@ const Cup = ({ id, hasBall, isRevealed, isSelectable, onClick, position }) => {
                  style={{ boxShadow: '0 0 8px #ffd700, 0 0 16px #ffa500' }} />
           </motion.div>
         )}
-
-        {/* 호버/선택 시 말풍선 - 모바일에서는 숨김 */}
-        {isSelectable && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileHover={{ opacity: 1, y: 0 }}
-            className="hidden sm:block absolute -top-5 md:-top-8 left-1/2 transform -translate-x-1/2 bg-white px-2 py-0.5 rounded-full text-[10px] md:text-sm font-bold shadow-lg whitespace-nowrap"
-          >
-            {id === 0 && "나야 나! 🙋"}
-            {id === 1 && "여기여기! 🎯"}
-            {id === 2 && "날 골라줘~ 💕"}
-          </motion.div>
-        )}
       </motion.div>
 
-      {/* 빈 컵 표시 (실패 시) */}
+      {/* 빈 그릇 표시 (실패 시) */}
       {isRevealed && !hasBall && (
         <motion.div
           initial={{ opacity: 0, scale: 0, y: 20 }}
@@ -252,7 +206,7 @@ const Cup = ({ id, hasBall, isRevealed, isSelectable, onClick, position }) => {
           className="absolute"
           style={{ bottom: '8px', zIndex: 15 }}
         >
-          <span className="text-xl sm:text-2xl md:text-4xl">❌</span>
+          <span className="text-xl sm:text-2xl md:text-3xl">❌</span>
         </motion.div>
       )}
     </motion.div>
